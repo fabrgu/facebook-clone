@@ -38,11 +38,16 @@ class Navbar extends React.Component {
     this.setState({[name]: value});
   }
 
-  handleSubmit(event){
-    console.log('submitting..');
+  async handleSubmit(event){
     event.preventDefault();
+
     if (this.validForm()){
-      console.log('we here');
+      const response = await axios.post(`${window.location}login`, { 
+        email: this.state.login_email,
+        password: this.state.login_password
+      });
+
+      console.log(response.data);
     }
 
   }
@@ -57,10 +62,12 @@ class Navbar extends React.Component {
                 Facebook Clone
               </Typography>
               <form action='/login' method="POST" id="login-form">
-                <TextField id="login-email" label="Email" required
-                  className="login-text" onChange={this.handleInputChange}
+                <TextField id="login-email" name="login_email" label="Email" 
+                  required className="login-text"
+                  onChange={this.handleInputChange}
                 />
-                <TextField id="login-password" label="Password" type="password"
+                <TextField id="login-password" label="Password" 
+                  name="login_password" type="password"
                   className="login-text" onChange={this.handleInputChange}
                   autoComplete="current_password" required />
                 <Button variant="contained" size="small"

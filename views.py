@@ -54,9 +54,23 @@ def signup():
 @app.route('/login', methods=['POST'])
 def login():
 
-    resp = make_response(status=200)
+    content = request.get_json()
+    unhashed_password = content['password']
+    email = content['email']
+    print(email)
+    user = User.query.filter_by(email_address=email).first()
+
+    resp_dict = {}
+    if user and check_password_hash(user.password, unhashed_password):
+        resp_dict['success'] = True
+        session['user_id'] = user.user_id
+    else :
+        resp_dict['success'] = False
+
+    resp = make_response(jsonify(resp_dict), 200)
     return resp
-    
+
+
 @app.route('/user/<int:user_id>')
 def show_user(user_id):
     """Show the user's posts """
