@@ -18,7 +18,34 @@ const muiTheme = createMuiTheme({
   }
 });
 
-class Navbar extends React.Component {
+class Logout extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.handleLogout = this.handleLogout.bind(this);
+  }
+
+  async handleLogout(){
+    const response = await axios.post(`${window.location.origin}/logout`);
+    if (response.status === 200 && response.data.hasOwnProperty("logged_out")){
+      if (response.data["logged_out"]){
+        window.location = window.location.origin;
+      }
+    }
+  }
+
+  render(){
+    return(
+      <React.Fragment>
+        <Button variant="contained" size="small"
+            onClick={this.handleLogout} className="logout-button">
+            Log Out
+        </Button>
+      </React.Fragment>
+    );
+  }
+}
+class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {login_email: '', login_password: ''};
@@ -39,15 +66,17 @@ class Navbar extends React.Component {
   }
 
   async handleSubmit(event){
-    event.preventDefault();
-
     if (this.validForm()){
       const response = await axios.post(`${window.location}login`, { 
         email: this.state.login_email,
         password: this.state.login_password
       });
 
-      console.log(response.data);
+      if (response.status === 200 && response.data.hasOwnProperty("success")){
+        if (response.data["success"]){
+          window.location = `${window.location.origin}/feed`;
+        }
+      }
     }
 
   }
@@ -55,26 +84,47 @@ class Navbar extends React.Component {
   render(){
     return(
       <React.Fragment>
+        <form action='/login' method="POST" id="login-form">
+          <TextField id="login-email" name="login_email" label="Email" 
+            required className="login-text"
+            onChange={this.handleInputChange}
+          />
+          <TextField id="login-password" label="Password" 
+            name="login_password" type="password"
+            className="login-text" onChange={this.handleInputChange}
+            autoComplete="current_password" required />
+          <Button variant="contained" size="small"
+            onClick={this.handleSubmit} className="login-button">
+            Log In
+          </Button>
+        </form>
+      </React.Fragment>
+    );
+  }
+}
+
+class Navbar extends React.Component {
+  constructor(props){
+    super(props);
+  }
+
+  render(){
+    const isLoggedIn = this.props.loggedIn;
+    let navLogEl;
+    if (isLoggedIn){
+      navLogEl = <Logout />;
+    } else {
+      navLogEl = <Login />;
+    }
+    return(
+      <React.Fragment>
         <ThemeProvider theme={muiTheme}>
           <AppBar position="static" title="Facebook Clone">
             <Toolbar>
-              <Typography variant="h5">
+              <Typography variant="h5" style={{flex : 1}}>
                 Facebook Clone
               </Typography>
-              <form action='/login' method="POST" id="login-form">
-                <TextField id="login-email" name="login_email" label="Email" 
-                  required className="login-text"
-                  onChange={this.handleInputChange}
-                />
-                <TextField id="login-password" label="Password" 
-                  name="login_password" type="password"
-                  className="login-text" onChange={this.handleInputChange}
-                  autoComplete="current_password" required />
-                <Button variant="contained" size="small"
-                  onClick={this.handleSubmit} className="login-button">
-                  Log In
-                </Button>
-              </form>
+              {navLogEl}
             </Toolbar>
           </AppBar>
         </ThemeProvider>
@@ -82,5 +132,3 @@ class Navbar extends React.Component {
     );
   }
 }
-
-ReactDOM.render(<Navbar />, document.querySelector("#navigation"));

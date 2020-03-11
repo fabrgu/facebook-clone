@@ -1,10 +1,22 @@
 from flask import (Flask, jsonify, redirect, session, make_response, 
                    flash, request, render_template)
+from functools import wraps
 from model import User, Friend, Post, Comment, db
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
+
+
+def login_required(func):
+    @wraps(func)
+    def decorated_function(*args, **kwargs):
+        if not session.get('user_id'):
+            flash("You must be logged in to see the page.")
+            return redirect('/')
+        return func(*args, **kwargs)
+
+    return decorated_function
 
 
 @app.route('/')
@@ -15,13 +27,13 @@ def index():
 
 
 @app.route('/feed')
+@login_required
 def show_feed():
     """Show the logged in user's customized feed."""
-    if session['user_id']:
-        return render_template('feed.html')
+    user_id = session.get('user_id')
+    user = User.query.get(user_id)
 
-    flash("You must be logged in to see the page.")
-    redirect('/')
+    return render_template('feed.html',user=user)
 
 
 @app.route('/signup', methods=['POST'])
@@ -51,19 +63,21 @@ def signup():
     flash('User created successfully. Please log in.')
     return redirect('/')
 
+
 @app.route('/login', methods=['POST'])
 def login():
 
     content = request.get_json()
     unhashed_password = content['password']
     email = content['email']
-    print(email)
+
     user = User.query.filter_by(email_address=email).first()
 
     resp_dict = {}
     if user and check_password_hash(user.password, unhashed_password):
         resp_dict['success'] = True
         session['user_id'] = user.user_id
+        flash('You are logged in.')
     else :
         resp_dict['success'] = False
 
@@ -71,7 +85,18 @@ def login():
     return resp
 
 
+@app.route('/logout', methods=['POST'])
+def logout():
+    if session.get('user_id'):
+        del session['user_id']
+
+    flash('You have been logged out.')
+    resp = make_response(jsonify({'logged_out': True}), 200)
+    return resp
+
+
 @app.route('/user/<int:user_id>')
+@login_required
 def show_user(user_id):
     """Show the user's posts """
     user = User.query.get(user_id)
@@ -80,6 +105,7 @@ def show_user(user_id):
 
 
 @app.route('/post', methods=['POST'])
+@login_required
 def add_post():
 
     user_id = request.form.get('user_id')
@@ -98,6 +124,7 @@ def add_post():
 
 
 @app.route('/comment', methods=['POST'])
+@login_required
 def add_comment():
 
     post_id = request.form.get('post_id')
@@ -119,6 +146,7 @@ def add_comment():
 
 
 @app.route('/friend', methods=['POST'])
+@login_required
 def add_friendship():
 
     user_1 = request.form.get('user_1')
