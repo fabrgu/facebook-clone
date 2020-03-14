@@ -36,6 +36,23 @@ def show_feed():
     return render_template('feed.html',user=user)
 
 
+@app.route('/posts_for_feed')
+@login_required
+def posts_for_feed():
+    """ return the posts for logged in user's feed"""
+
+    user_id = session.get('user_id')
+    posts = Post.query.filter(Post.user_id == user_id,
+                              Post.active == True).all()
+    post_list = []
+    for post in posts:
+        post_list.append(post.to_dict_for_json())
+
+    resp = make_response(jsonify(post_list), 200)
+
+    return resp
+
+
 @app.route('/signup', methods=['POST'])
 def signup():
     email_address = request.form.get('email_address')
@@ -104,12 +121,13 @@ def show_user(user_id):
     return render_template('user.html',user=user)
 
 
-@app.route('/post', methods=['POST'])
+@app.route('/add_post', methods=['POST'])
 @login_required
 def add_post():
 
-    user_id = request.form.get('user_id')
-    message = request.form.get('message')
+    content = request.get_json()
+    user_id = content['user_id']
+    message = content['message']
 
     post = Post(user_id=user_id, 
                 posted_on=datetime.today(), 
@@ -119,17 +137,18 @@ def add_post():
 
     db.session.add(post)
     db.session.commit()
-    resp = make_response(status=200)
+    resp = make_response(jsonify({'success': True}), 200)
     return resp
 
 
-@app.route('/comment', methods=['POST'])
+@app.route('/add_comment', methods=['POST'])
 @login_required
 def add_comment():
 
-    post_id = request.form.get('post_id')
-    user_id = request.form.get('user_id')
-    comment = request.form.get('comment')
+    content = request.get_json()
+    post_id = content['post_id']
+    user_id = content['user_id']
+    comment = content['comment']
 
     comment = Comment(post_id=post_id,
                       user_id=user_id,
@@ -141,7 +160,7 @@ def add_comment():
     db.session.add(comment)
     db.session.commit()
 
-    resp = make_response(status=200)
+    resp = make_response(jsonify({'success': True}), 200)
     return resp
 
 

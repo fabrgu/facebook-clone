@@ -26,6 +26,7 @@
     {% block body %}
     {% endblock %}
     <script src="/static/js/navbar.jsx" type="text/jsx"></script>
+    <script src="/static/js/loading.jsx" type="text/jsx"></script>
     <script type="text/jsx">
       {% if session.get('user_id', False)%}
         ReactDOM.render(<Navbar loggedIn={true} />, document.querySelector("#navigation"));

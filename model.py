@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 # Instantiate a SQLAlchemy object. We need this to create our db.Model classes.
 db = SQLAlchemy()
@@ -54,9 +55,23 @@ class Post(db.Model):
     message = db.Column(db.String(500), nullable=False)
     active = db.Column(db.Boolean, nullable=False)
 
+    # Define relationship to user
+    user = db.relationship("User", backref="posts", order_by=post_id)
+
     def __repr__(self):
         """Return a human-readable representation of a Post."""
         return f'<Post post_id={self.post_id} user_id={self.user_id}'
+
+    def to_dict_for_json(self):
+        json_dict = {}
+        json_dict['post_id'] = self.post_id
+        json_dict['user_id'] = self.user_id
+        json_dict['posted_on'] = self.posted_on.strftime('%b %d, %Y %H:%M:%S')
+        json_dict['modified_on'] = self.modified_on.strftime('%b %d, %Y %H:%M:%S')
+        json_dict['message'] = self.message
+
+        return json_dict
+
 
 class Comment(db.Model):
     """ Data model for a comment. """
@@ -69,6 +84,9 @@ class Comment(db.Model):
     modified_on = db.Column(db.DateTime, nullable=False)
     comment = db.Column(db.String(500), nullable=False)
     active = db.Column(db.Boolean, nullable=False)
+
+    # Define relationship to Post
+    post = db.relationship("Post", backref="comments", order_by=comment_id)
 
     def __repr__(self):
         """Return a human-readable representation of a Comment."""

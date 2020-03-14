@@ -67,7 +67,7 @@ class Login extends React.Component {
 
   async handleSubmit(event){
     if (this.validForm()){
-      const response = await axios.post(`${window.location}login`, { 
+      const response = await axios.post(`${window.location.origin}/login`, { 
         email: this.state.login_email,
         password: this.state.login_password
       });
@@ -121,7 +121,7 @@ class Navbar extends React.Component {
         <ThemeProvider theme={muiTheme}>
           <AppBar position="static" title="Facebook Clone">
             <Toolbar>
-              <Typography variant="h5" style={{flex : 1}}>
+              <Typography variant="h5" style={{flex: 1}}>
                 Facebook Clone
               </Typography>
               {navLogEl}
