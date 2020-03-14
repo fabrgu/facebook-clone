@@ -42,8 +42,8 @@ def posts_for_feed():
     """ return the posts for logged in user's feed"""
 
     user_id = session.get('user_id')
-    posts = Post.query.filter(Post.user_id == user_id,
-                              Post.active == True).all()
+    posts = Post.query.outerjoin(Comment).filter(Post.user_id == user_id,
+                              Post.active == True, Comment.active == True).all()
     post_list = []
     for post in posts:
         post_list.append(post.to_dict_for_json())
@@ -137,7 +137,10 @@ def add_post():
 
     db.session.add(post)
     db.session.commit()
-    resp = make_response(jsonify({'success': True}), 200)
+    resp = make_response(jsonify(
+                        {'success': True, 
+                        'post': post.to_dict_for_json()
+                        }), 200)
     return resp
 
 
@@ -160,7 +163,10 @@ def add_comment():
     db.session.add(comment)
     db.session.commit()
 
-    resp = make_response(jsonify({'success': True}), 200)
+    resp = make_response(jsonify(
+                        {'success': True, 
+                        'comment': comment.to_dict_for_json()
+                        }), 200)
     return resp
 
 

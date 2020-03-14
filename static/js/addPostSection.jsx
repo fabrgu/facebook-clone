@@ -27,11 +27,11 @@ class AddPostSection extends React.Component {
   }
 
   async handleAddPost() {
-    const user_id = this.props.user_id || '';
+    const userId = this.props.userId || '';
     const message = this.state.message;
-    if (message && user_id) {
+    if (message && userId) {
       const response = await axios.post(`${window.location.origin}/add_post`, {
-        user_id: user_id,
+        user_id: userId,
         message: message
       });
 
@@ -59,13 +59,13 @@ class AddPostSection extends React.Component {
                   </Typography>
                   <TextareaAutosize aria-label="add new post" 
                     rowsMin={5} id="new-post" name="new-post"
-                    onChange={this.handleNewPostInputChange}
+                    onChange={this.props.handleNewPostInputChange}
                     />
                 </Grid>
               </Grid>
               <Grid item>
                 <Button variant="contained" size="small" style={{margin: 5}}
-                  onClick={this.handleAddPost} className="add-post">
+                  onClick={this.props.addNewPost} className="add-post">
                   Add Post
                 </Button>
               </Grid>

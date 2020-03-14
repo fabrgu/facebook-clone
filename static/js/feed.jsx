@@ -12,8 +12,12 @@ class Feed extends React.Component {
     super(props);
     this.state = {
       isLoaded: false,
-      posts: []
+      posts: [],
+      newPostMessage: ''
     }
+
+    this.addNewPost = this.addNewPost.bind(this);
+    this.handleNewPostInputChange = this.handleNewPostInputChange.bind(this);
   }
 
   componentDidMount() {
@@ -30,6 +34,32 @@ class Feed extends React.Component {
       });
   }
 
+  handleNewPostInputChange(event){
+    this.setState({message: event.target.value});
+  }
+
+  async addNewPost(){
+    const userId = this.props.userId || '';
+    const message = this.state.message;
+    if (message && userId) {
+      const response = await axios.post(`${window.location.origin}/add_post`, {
+        user_id: userId,
+        message: message
+      });
+
+      if (response.status === 200 && response.data.hasOwnProperty("success")){
+        if (response.data["success"] && response.data["post"]){
+          const existingPosts = this.state.posts;
+          const post = response.data["post"];
+          existingPosts.push(post)
+          this.setState({
+            posts: existingPosts
+          });
+        }
+      }
+    }
+  }
+
   render(){
     const { isLoaded, posts } = this.state
     let element = <Loading />;
@@ -37,11 +67,13 @@ class Feed extends React.Component {
       const postsToLoad = []
       for (const post of posts){
         postsToLoad.push(
-          <Post key={post.post_id} 
+          <Post key={post.post_id}
+            post={post} 
             post_id={post.post_id}
-            user_id={this.props.user_id} 
+            userId={this.props.userId} 
             message={post.message}
-            posted_on={post.posted_on} />
+            posted_on={post.posted_on}
+            comments={post.comments} />
         );
       }
 
@@ -50,7 +82,9 @@ class Feed extends React.Component {
     return(
       <div className="feed-centered">
         <ThemeProvider theme={darkTheme}>
-          <AddPostSection user_id={this.props.user_id} />
+          <AddPostSection userId={this.props.userId} 
+            addNewPost={this.addNewPost}
+            handleNewPostInputChange={this.handleNewPostInputChange} />
           {element}
         </ThemeProvider>
       </div>

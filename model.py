@@ -57,6 +57,7 @@ class Post(db.Model):
 
     # Define relationship to user
     user = db.relationship("User", backref="posts", order_by=post_id)
+    comments = db.relationship("Comment",order_by=post_id)
 
     def __repr__(self):
         """Return a human-readable representation of a Post."""
@@ -69,6 +70,9 @@ class Post(db.Model):
         json_dict['posted_on'] = self.posted_on.strftime('%b %d, %Y %H:%M:%S')
         json_dict['modified_on'] = self.modified_on.strftime('%b %d, %Y %H:%M:%S')
         json_dict['message'] = self.message
+        json_dict['comments'] = []
+        for comment in comments:
+            json_dict['comments'].append(comment)
 
         return json_dict
 
@@ -86,12 +90,23 @@ class Comment(db.Model):
     active = db.Column(db.Boolean, nullable=False)
 
     # Define relationship to Post
-    post = db.relationship("Post", backref="comments", order_by=comment_id)
+    post = db.relationship("Post", order_by=comment_id)
 
     def __repr__(self):
         """Return a human-readable representation of a Comment."""
         return (f'<Comment comment_id={self.comment_id}'
                 f' post_id={self.post_id} user_id={self.user_id}')
+
+    def to_dict_for_json(self):
+        json_dict = {}
+        json_dict['comment_id'] = self.comment_id
+        json_dict['post_id'] = self.post_id
+        json_dict['user_id'] = self.user_id
+        json_dict['commented_on'] = self.commented_on.strftime('%b %d, %Y %H:%M:%S')
+        json_dict['modified_on'] = self.modified_on.strftime('%b %d, %Y %H:%M:%S')
+        json_dict['comment'] = self.comment
+
+        return json_dict
 
 # Helper functions
 
