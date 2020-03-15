@@ -3,6 +3,20 @@
 {% block title %}Facebook Clone - User's post feed{% endblock %}
 
 {% block body %}
+  <h2>{{ user.first_name }} {{ user.last_name }}'s Posts</h2>
+  <div id="feed-link">
+    <a href="/feed" title="Go to your feed">
+      Go to Feed
+    </a>
+  </div>
+  <div id="searchBar">
+    <form action="/search">
+      <label for="search">Search by first name or last name</label>
+      <input id="search" name="term" required
+        type="text" placeholder="search by first name or last name">
+      <button type="submit">Search</button>
+    </form>
+  </div>
   <div id="addPost"></div>
   <div id="feed"></div>
 {% endblock %}
@@ -12,6 +26,6 @@
   <script src="/static/js/post.jsx" type="text/jsx"></script>
   <script src="/static/js/feed.jsx" type="text/jsx"></script>
   <script type="text/jsx">
-    ReactDOM.render(<Feed userId="{{user.user_id}}" />, document.querySelector("#feed"));
+    ReactDOM.render(<Feed userId="{{user.user_id}}" userProfile={true} />, document.querySelector("#feed"));
   </script>
 {% endblock %}

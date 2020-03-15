@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Facebook Clone - Search{% endblock %}
+
+{% block body %}
+<h2>Results</h2>
+<ul>
+  {% for user in results %}
+    <li>
+      {{ user.first_name }} {{ user.last_name }}
+      <form action="/friend" method="POST">
+        <input type="hidden" name="friend_user_id" value="{{ user.user_id }}">
+        <button type="submit">Add Friend</button>
+      </form>
+    </li>
+  {% endfor %}
+</ul>
+<div id="back-from-search">
+  <a href="/feed" title="go back to feed">Go back to feed</a>
+</div>
+{% endblock %}

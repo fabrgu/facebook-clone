@@ -35,15 +35,32 @@ def show_feed():
 
     return render_template('feed.html',user=user)
 
-
 @app.route('/posts_for_feed')
 @login_required
 def posts_for_feed():
     """ return the posts for logged in user's feed"""
+    user_id = session.get('user_id')
+    posts = Friend.query.join(Post, db.and_(Post.user_id == Friend.user_2,
+                                Post.active == True)).outerjoin(Comment, db.and_(Comment.post_id == Post.post_id,
+                                Comment.active == True)).filter(Friend.user_1 == user_id,
+                                Friend.active == True).all()
+    post_list = []
+    for post in posts:
+        post_list.append(post.to_dict_for_json())
+
+    resp = make_response(jsonify(post_list), 200)
+    return resp
+
+
+@app.route('/posts_for_user_feed')
+@login_required
+def users_posts():
+    """ return the users's posts"""
 
     user_id = session.get('user_id')
-    posts = Post.query.outerjoin(Comment).filter(Post.user_id == user_id,
-                              Post.active == True, Comment.active == True).all()
+    posts = Post.query.outerjoin(Comment, db.and_(Comment.post_id == Post.post_id, 
+                                Comment.active == True)).filter(Post.user_id == user_id,
+                                Post.active == True).all()
     post_list = []
     for post in posts:
         post_list.append(post.to_dict_for_json())
@@ -174,8 +191,8 @@ def add_comment():
 @login_required
 def add_friendship():
 
-    user_1 = request.form.get('user_1')
-    user_2 = request.form.get('user_2')
+    user_1 = session['user_id']
+    user_2 = request.form.get('friend_user_id')
 
     friendship = Friend(user_1=user_1, 
                         user_2=user_2, 
@@ -186,5 +203,18 @@ def add_friendship():
     db.session.add(friendship)
     db.session.commit()
 
-    resp = make_response(status=200)
-    return resp
+    return redirect('/feed')
+
+
+@app.route('/search')
+@login_required
+def search():
+
+    search_term = request.args.get('term')
+    user_id = session['user_id']
+
+    results = User.query.filter((User.user_id != user_id) & 
+                                ((User.first_name == search_term) | 
+                                (User.last_name == search_term))).all()
+
+    return render_template('search.html',results=results)

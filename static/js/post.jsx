@@ -90,8 +90,7 @@ class Post extends React.Component {
                 rowsMin={2} id="new-comment" name="new-comment"
                 onChange={this.handleNewCommentInputChange}
               />
-              <Button size="small" onClick={this.handleAddComment} 
-                postId={this.props.post.post_id}>
+              <Button size="small" onClick={this.handleAddComment}>
                 Add Comment
               </Button>
             </CardActions>

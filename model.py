@@ -55,9 +55,10 @@ class Post(db.Model):
     message = db.Column(db.String(500), nullable=False)
     active = db.Column(db.Boolean, nullable=False)
 
-    # Define relationship to user
+    # Define relationship to User
     user = db.relationship("User", backref="posts", order_by=post_id)
-    comments = db.relationship("Comment",order_by=post_id)
+    # Define relationship to Comment
+    comments = db.relationship("Comment")
 
     def __repr__(self):
         """Return a human-readable representation of a Post."""
@@ -71,7 +72,7 @@ class Post(db.Model):
         json_dict['modified_on'] = self.modified_on.strftime('%b %d, %Y %H:%M:%S')
         json_dict['message'] = self.message
         json_dict['comments'] = []
-        for comment in comments:
+        for comment in self.comments:
             json_dict['comments'].append(comment)
 
         return json_dict
@@ -117,6 +118,7 @@ def connect_to_db(app):
     # Configure to use PstgreSQL database
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///facebook-clone'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['SQLALCHEMY_ECHO'] = True
     db.app = app
     db.init_app(app)
 

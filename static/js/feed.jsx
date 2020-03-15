@@ -1,11 +1,29 @@
 "use strict";
 
+const {
+  CircularProgress
+} = MaterialUI
+
 const darkTheme = createMuiTheme({
   palette: {
     type: 'dark'
   },
   spacing: 2
 });
+
+class Loading extends React.Component {
+  constructor(props){
+    super(props);
+  }
+
+  render(){
+    return(
+      <React.Fragment>
+        <CircularProgress style={{ marginTop: 15 }}/>
+      </React.Fragment>
+    )
+  }
+}
 
 class Feed extends React.Component {
   constructor(props){
@@ -21,7 +39,10 @@ class Feed extends React.Component {
   }
 
   componentDidMount() {
-    axios.get(`${window.location.origin}/posts_for_feed`)
+    const fullUrl = this.props.userProfile ? 
+              `${window.location.origin}/posts_for_user_feed` :
+              `${window.location.origin}/posts_for_feed`
+    axios.get(fullUrl)
       .then((response) => {
         let posts_to_load = Array.isArray(response.data) ? response.data : [];
         this.setState({
