@@ -40,12 +40,13 @@ def show_feed():
 def posts_for_feed():
     """ return the posts for logged in user's feed"""
     user_id = session.get('user_id')
-    posts = Friend.query.join(Post, db.and_(Post.user_id == Friend.user_2,
-                                Post.active == True)).outerjoin(Comment, db.and_(Comment.post_id == Post.post_id,
+    friend_posts = Post.query.join(Friend, db.and_(Post.user_id == Friend.user_2,
+                                Friend.active == True)).outerjoin(Comment, db.and_(Comment.post_id == Post.post_id,
                                 Comment.active == True)).filter(Friend.user_1 == user_id,
-                                Friend.active == True).all()
+                                Post.active == True).order_by(Post.post_id.desc()).all()
+
     post_list = []
-    for post in posts:
+    for post in friend_posts:
         post_list.append(post.to_dict_for_json())
 
     resp = make_response(jsonify(post_list), 200)
@@ -60,7 +61,7 @@ def users_posts():
     user_id = session.get('user_id')
     posts = Post.query.outerjoin(Comment, db.and_(Comment.post_id == Post.post_id, 
                                 Comment.active == True)).filter(Post.user_id == user_id,
-                                Post.active == True).all()
+                                Post.active == True).order_by(Post.post_id.desc()).all()
     post_list = []
     for post in posts:
         post_list.append(post.to_dict_for_json())
@@ -213,8 +214,28 @@ def search():
     search_term = request.args.get('term')
     user_id = session['user_id']
 
-    results = User.query.filter((User.user_id != user_id) & 
-                                ((User.first_name == search_term) | 
-                                (User.last_name == search_term))).all()
-
+    results = db.session.query(User, 
+                               Friend).outerjoin(Friend, db.and_(Friend.user_1 == user_id, 
+                               Friend.active == True)).filter((User.user_id != user_id) & 
+                               (User.public == True) & 
+                               ((Friend.user_2 == None) |
+                                (Friend.user_2 != User.user_id)) &
+                               (((User.first_name.like(f'%{search_term}%')) | 
+                               (User.last_name.like(f'%{search_term}%'))))).all()
+    print(results)
     return render_template('search.html',results=results)
+
+
+@app.route('/public', methods=['POST'])
+@login_required
+def change_public():
+
+    public_form = request.form.get('public')
+    public = True if public_form == "true" else False
+    user_id = request.form.get('user_id', session['user_id'])
+    user = User.query.get(user_id)
+    user.public = public
+
+    db.session.commit()
+
+    return redirect(f'/user/{user_id}')

@@ -56,12 +56,12 @@ class Feed extends React.Component {
   }
 
   handleNewPostInputChange(event){
-    this.setState({message: event.target.value});
+    this.setState({newPostMessage: event.target.value});
   }
 
   async addNewPost(){
     const userId = this.props.userId || '';
-    const message = this.state.message;
+    const message = this.state.newPostMessage;
     if (message && userId) {
       const response = await axios.post(`${window.location.origin}/add_post`, {
         user_id: userId,
@@ -69,12 +69,13 @@ class Feed extends React.Component {
       });
 
       if (response.status === 200 && response.data.hasOwnProperty("success")){
-        if (response.data["success"] && response.data["post"]){
+        if (response.data["success"] && response.data.hasOwnProperty("post")){
           const existingPosts = this.state.posts;
           const post = response.data["post"];
-          existingPosts.push(post)
+          existingPosts.unshift(post)
           this.setState({
-            posts: existingPosts
+            posts: existingPosts,
+            newPostMessage: ''
           });
         }
       }
@@ -90,11 +91,7 @@ class Feed extends React.Component {
         postsToLoad.push(
           <Post key={post.post_id}
             post={post} 
-            post_id={post.post_id}
-            userId={this.props.userId} 
-            message={post.message}
-            posted_on={post.posted_on}
-            comments={post.comments} />
+            userId={this.props.userId} />
         );
       }
 
@@ -103,10 +100,13 @@ class Feed extends React.Component {
     return(
       <div className="feed-centered">
         <ThemeProvider theme={darkTheme}>
+        {this.props.userProfile &&
           <AddPostSection userId={this.props.userId} 
             addNewPost={this.addNewPost}
+            newPostMessage={this.state.newPostMessage}
             handleNewPostInputChange={this.handleNewPostInputChange} />
-          {element}
+        }
+        {element}
         </ThemeProvider>
       </div>
     );

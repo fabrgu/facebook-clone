@@ -4,6 +4,15 @@
 
 {% block body %}
   <h2>{{ user.first_name }} {{ user.last_name }}'s Posts</h2>
+  <div id="profile">
+    <form action="/public" method="POST">
+      <label for="public">Public?</label>
+      <input type="checkbox" id="public" name="public" value="true"
+        {% if user.public %}checked{% endif %}>
+      If yes, people will be able to search and friend you.
+      <button type="submit">Change public option</button>
+    </form>
+  </div>
   <div id="feed-link">
     <a href="/feed" title="Go to your feed">
       Go to Feed

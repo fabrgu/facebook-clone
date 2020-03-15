@@ -16,7 +16,8 @@ class Comment extends React.Component {
     return(
       <div>
         <Typography paragraph>
-          { this.props.comment }
+          { this.props.comment.user.first_name } {this.props.comment.user.last_name} says:
+          <br /> { this.props.comment.comment }
         </Typography>
       </div>
     );
@@ -29,13 +30,12 @@ class Post extends React.Component {
       newCommentText: '', 
       comments: this.props.post.comments 
     };
-
     this.handleAddComment = this.handleAddComment.bind(this);
-    this.handleNewPostInputChange = this.handleNewPostInputChange.bind(this);
+    this.handleNewCommentInputChange = this.handleNewCommentInputChange.bind(this);
   }
 
-  handleNewPostInputChange(event){
-    this.setState({comment: event.target.value});
+  handleNewCommentInputChange(event){
+    this.setState({newCommentText: event.target.value});
   }
 
   async handleAddComment() {
@@ -45,15 +45,15 @@ class Post extends React.Component {
       const response = await axios.post(`${window.location.origin}/add_comment`, 
         {
           post_id: post_id,
-          user_id: this.props.user_id,
+          user_id: this.props.userId,
           comment: comment
         });
-
       if (response.status === 200 && response.data.hasOwnProperty("success")){
-        if (response.data["success"] && response.data["comment"]){
+        if (response.data["success"] && response.data.hasOwnProperty("comment")){
           const existingComments = this.state.comments;
           const newComment = response.data["comment"];
           existingComments.push(newComment);
+          this.setState({comments: existingComments, newCommentText: ''});
         }
       }
     }
@@ -65,7 +65,7 @@ class Post extends React.Component {
     for (const comment of comments){
        commentElements.push(
          <Comment key={comment.comment_id} 
-           comment={comment.comment} />
+           comment={comment} />
        );
     }
     return(
@@ -73,7 +73,8 @@ class Post extends React.Component {
         <Card>
           <CardContent>
             <Typography color="textSecondary" gutterBottom>
-              Post { this.props.post.post_id } 
+              { this.props.post.user.first_name } 
+              { this.props.post.user.last_name } 
             </Typography>
             <Typography color="textSecondary">
               { this.props.post.posted_on } 
@@ -82,13 +83,14 @@ class Post extends React.Component {
               { this.props.post.message }
             </Typography>
             <Typography variant="body2">
-              Comments
+              <b>Comments</b>
             </Typography>
             {commentElements}
             <CardActions>
               <TextareaAutosize aria-label="add new comment" 
                 rowsMin={2} id="new-comment" name="new-comment"
-                onChange={this.handleNewCommentInputChange}
+                onChange={this.handleNewCommentInputChange} 
+                value={this.state.newCommentText}
               />
               <Button size="small" onClick={this.handleAddComment}>
                 Add Comment

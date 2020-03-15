@@ -16,6 +16,7 @@
       <button type="submit">Search</button>
     </form>
   </div>
+  <p>Your feed is comprised of your friends' posts</p>
   <div id="addPost"></div>
   <div id="feed"></div>
 {% endblock %}
@@ -25,6 +26,6 @@
   <script src="/static/js/post.jsx" type="text/jsx"></script>
   <script src="/static/js/feed.jsx" type="text/jsx"></script>
   <script type="text/jsx">
-    ReactDOM.render(<Feed user_id="{{user.user_id}}" userProfile={false} />, document.querySelector("#feed"));
+    ReactDOM.render(<Feed userId="{{user.user_id}}" userProfile={false} />, document.querySelector("#feed"));
   </script>
 {% endblock %}

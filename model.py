@@ -25,6 +25,14 @@ class User(db.Model):
             f' first_name={self.first_name} last_name={self.last_name}'
             f' email_address={self.email_address}')
 
+    def to_dict_for_json(self):
+        json_dict = {}
+        json_dict['user_id'] = self.user_id
+        json_dict['first_name'] = self.first_name
+        json_dict['last_name'] = self.last_name
+
+        return json_dict
+
 
 class Friend(db.Model):
     """ Data model for a friendship. """
@@ -41,7 +49,7 @@ class Friend(db.Model):
         """Return a human-readable representation of a friendship."""
 
         return (f'<Friend user_1={self.user_1}'
-            f' user_2={self.user_2} last_name={self.last_name}')
+            f' user_2={self.user_2}')
 
 
 class Post(db.Model):
@@ -71,9 +79,10 @@ class Post(db.Model):
         json_dict['posted_on'] = self.posted_on.strftime('%b %d, %Y %H:%M:%S')
         json_dict['modified_on'] = self.modified_on.strftime('%b %d, %Y %H:%M:%S')
         json_dict['message'] = self.message
+        json_dict['user'] = self.user.to_dict_for_json()
         json_dict['comments'] = []
         for comment in self.comments:
-            json_dict['comments'].append(comment)
+            json_dict['comments'].append(comment.to_dict_for_json())
 
         return json_dict
 
@@ -93,6 +102,9 @@ class Comment(db.Model):
     # Define relationship to Post
     post = db.relationship("Post", order_by=comment_id)
 
+    #Define relationship to User
+    user = db.relationship("User", backref="comments")
+
     def __repr__(self):
         """Return a human-readable representation of a Comment."""
         return (f'<Comment comment_id={self.comment_id}'
@@ -106,6 +118,7 @@ class Comment(db.Model):
         json_dict['commented_on'] = self.commented_on.strftime('%b %d, %Y %H:%M:%S')
         json_dict['modified_on'] = self.modified_on.strftime('%b %d, %Y %H:%M:%S')
         json_dict['comment'] = self.comment
+        json_dict['user'] = self.user.to_dict_for_json()
 
         return json_dict
 

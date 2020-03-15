@@ -3,19 +3,24 @@
 {% block title %}Facebook Clone - Search{% endblock %}
 
 {% block body %}
-<h2>Results</h2>
-<ul>
-  {% for user in results %}
-    <li>
-      {{ user.first_name }} {{ user.last_name }}
-      <form action="/friend" method="POST">
-        <input type="hidden" name="friend_user_id" value="{{ user.user_id }}">
-        <button type="submit">Add Friend</button>
-      </form>
-    </li>
-  {% endfor %}
-</ul>
-<div id="back-from-search">
-  <a href="/feed" title="go back to feed">Go back to feed</a>
-</div>
+  <h2>Results</h2>
+  <h3>Only users you have not friended yet will appear</h3>
+  {% if results|length > 0 %}
+    <ul>
+      {% for result in results %}
+        <li>
+          <p>{{ result[0].first_name }} {{ result[0].last_name }}</p>
+          <form action="/friend" method="POST">
+            <input type="hidden" name="friend_user_id" value="{{ result[0].user_id }}">
+            <button type="submit">Add Friend</button>
+          </form>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else%}
+    <div>No results</div>
+  {% endif %}
+  <div id="back-from-search">
+    <a href="/feed" title="go back to feed">Go back to feed</a>
+  </div>
 {% endblock %}

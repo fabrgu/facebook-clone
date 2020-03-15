@@ -16,32 +16,6 @@ const darkTheme = createMuiTheme({
 class AddPostSection extends React.Component {
   constructor(props){
     super(props);
-    this.state = {message: ''};
-
-    this.handleAddPost = this.handleAddPost.bind(this);
-    this.handleNewPostInputChange = this.handleNewPostInputChange.bind(this);
-  }
-
-  handleNewPostInputChange(event){
-    this.setState({message: event.target.value});
-  }
-
-  async handleAddPost() {
-    const userId = this.props.userId || '';
-    const message = this.state.message;
-    if (message && userId) {
-      const response = await axios.post(`${window.location.origin}/add_post`, {
-        user_id: userId,
-        message: message
-      });
-
-      if (response.status === 200 && response.data.hasOwnProperty("success")){
-        if (response.data["success"]){
-          console.log('post successful!');
-        }
-      }
-    }
-
   }
 
   render(){
@@ -60,6 +34,7 @@ class AddPostSection extends React.Component {
                   <TextareaAutosize aria-label="add new post" 
                     rowsMin={5} id="new-post" name="new-post"
                     onChange={this.props.handleNewPostInputChange}
+                    value={this.props.newPostMessage}
                     />
                 </Grid>
               </Grid>
