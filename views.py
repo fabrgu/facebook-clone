@@ -18,6 +18,42 @@ def login_required(func):
 
     return decorated_function
 
+def get_suggested_friends(user_id):
+
+    friends = Friend.query.filter(Friend.user_1 == user_id, 
+                                  Friend.active == True).all()
+    
+    # only suggesting friends of friends
+
+    social_graph = {}
+    social_graph[user_id] = []
+    for friend in friends:
+        social_graph[user_id].append(friend.user_2)
+        if friend not in social_graph:
+            social_graph[friend.user_2] = []
+            friends_friends = Friend.query.filter(Friend.user_1 == friend.user_2,
+                                                  Friend.active == True).all()
+
+            for friend_of_friend in friends_friends:
+                social_graph[friend.user_2].append(friend_of_friend.user_2)
+
+
+    suggested_friends = []
+    friend_list = social_graph[user_id]
+
+    for friend in friend_list:
+        friends_friend_list = social_graph.get(friend)
+        for friend_of_friend in friends_friend_list:
+            if (friend_of_friend != user_id
+                and friend_of_friend not in social_graph
+                and friend_of_friend not in suggested_friends):
+                    user = User.query.get(friend_of_friend)
+                    suggested_friends.append(user)
+                    if len(suggested_friends) > 1:
+                        break
+    print(suggested_friends)
+    return suggested_friends
+
 
 @app.route('/')
 def index():
@@ -32,8 +68,11 @@ def show_feed():
     """Show the logged in user's customized feed."""
     user_id = session.get('user_id')
     user = User.query.get(user_id)
+    suggested_friends = get_suggested_friends(user_id)
 
-    return render_template('feed.html',user=user)
+    return render_template('feed.html', user=user, 
+                          suggested_friends=suggested_friends)
+
 
 @app.route('/posts_for_feed')
 @login_required
@@ -222,7 +261,7 @@ def search():
                                 (Friend.user_2 != User.user_id)) &
                                (((User.first_name.like(f'%{search_term}%')) | 
                                (User.last_name.like(f'%{search_term}%'))))).all()
-    print(results)
+
     return render_template('search.html',results=results)
 
 

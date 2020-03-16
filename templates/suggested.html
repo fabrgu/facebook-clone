@@ -1,0 +1,19 @@
+<div id="suggested-friends">
+  <h4>Friend suggestions</h4>
+  {% if suggested_friends|length > 0 %}
+    <ul>
+      {% for suggested_friend in suggested_friends %}
+        <li>
+          <p>{{ suggested_friend.first_name }} {{ suggested_friend.last_name }}</p>
+          <form action="/friend" method="POST">
+            <input type="hidden" name="friend_user_id" 
+              value="{{ suggested_friend.user_id }}">
+            <button type="submit">Add Friend</button>
+          </form>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No results</p>
+  {% endif %}
+</div>
