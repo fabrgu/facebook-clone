@@ -25,7 +25,8 @@ def get_suggested_friends(user_id):
                                   Friend.active == True).all()
 
     # only suggesting friends of friends
-
+    # only user's friends are the keys in the social graph's underlying dict
+    
     social_graph = SocialGraph()
     social_graph.add_friend_node(user_id)
     for friend in friends:
