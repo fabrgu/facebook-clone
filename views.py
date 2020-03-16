@@ -4,6 +4,7 @@ from functools import wraps
 from model import User, Friend, Post, Comment, db
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
+from graph import SocialGraph
 
 app = Flask(__name__)
 
@@ -22,27 +23,27 @@ def get_suggested_friends(user_id):
 
     friends = Friend.query.filter(Friend.user_1 == user_id, 
                                   Friend.active == True).all()
-    
+
     # only suggesting friends of friends
 
-    social_graph = {}
-    social_graph[user_id] = []
+    social_graph = SocialGraph()
+    social_graph.add_friend_node(user_id)
     for friend in friends:
-        social_graph[user_id].append(friend.user_2)
+        social_graph.add_friend_edge(user_id, friend.user_2)
         if friend not in social_graph:
-            social_graph[friend.user_2] = []
+            social_graph.add_friend_node(friend.user_2)
             friends_friends = Friend.query.filter(Friend.user_1 == friend.user_2,
                                                   Friend.active == True).all()
 
             for friend_of_friend in friends_friends:
-                social_graph[friend.user_2].append(friend_of_friend.user_2)
+                social_graph.add_friend_edge(friend.user_2, friend_of_friend.user_2)
 
 
     suggested_friends = []
-    friend_list = social_graph[user_id]
+    friend_list = social_graph.get_friend_connections(user_id)
 
-    for friend in friend_list:
-        friends_friend_list = social_graph.get(friend)
+    for friend_user_id in friend_list:
+        friends_friend_list = social_graph.get_friend_connections(friend_user_id)
         for friend_of_friend in friends_friend_list:
             if (friend_of_friend != user_id
                 and friend_of_friend not in social_graph
@@ -51,7 +52,7 @@ def get_suggested_friends(user_id):
                     suggested_friends.append(user)
                     if len(suggested_friends) > 1:
                         break
-    print(suggested_friends)
+
     return suggested_friends
 
 
