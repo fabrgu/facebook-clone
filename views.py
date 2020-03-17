@@ -8,12 +8,14 @@ from graph import SocialGraph
 
 app = Flask(__name__)
 
+success_flash = 'success'
+err_flash = 'error'
 
 def login_required(func):
     @wraps(func)
     def decorated_function(*args, **kwargs):
         if not session.get('user_id'):
-            flash("You must be logged in to see the page.")
+            flash('You must be logged in to see the page.', err_flash)
             return redirect('/')
         return func(*args, **kwargs)
 
@@ -26,7 +28,7 @@ def get_suggested_friends(user_id):
 
     # only suggesting friends of friends
     # only user's friends are the keys in the social graph's underlying dict
-    
+
     social_graph = SocialGraph()
     social_graph.add_friend_node(user_id)
     for friend in friends:
@@ -60,7 +62,9 @@ def get_suggested_friends(user_id):
 @app.route('/')
 def index():
     """Show the sign up/login page."""
-
+    if session.get('user_id'):
+        return redirect('/feed')
+        
     return render_template('index.html')
 
 
@@ -118,7 +122,7 @@ def signup():
     email_in_use = User.query.filter_by(email_address=email_address).first()
 
     if email_in_use:
-        flash('User not created. Email already in use.')
+        flash('User not created. Email already in use.', err_flash)
         return redirect('/')
 
     first_name = request.form.get('first_name')
@@ -136,7 +140,7 @@ def signup():
     db.session.add(new_user)
     db.session.commit()
 
-    flash('User created successfully. Please log in.')
+    flash('User created successfully. Please log in.', success_flash)
     return redirect('/')
 
 
@@ -153,7 +157,7 @@ def login():
     if user and check_password_hash(user.password, unhashed_password):
         resp_dict['success'] = True
         session['user_id'] = user.user_id
-        flash('You are logged in.')
+        flash('You are logged in.', success_flash)
     else :
         resp_dict['success'] = False
 
@@ -166,7 +170,7 @@ def logout():
     if session.get('user_id'):
         del session['user_id']
 
-    flash('You have been logged out.')
+    flash('You have been logged out.', success_flash)
     resp = make_response(jsonify({'logged_out': True}), 200)
     return resp
 
@@ -245,6 +249,8 @@ def add_friendship():
     db.session.add(friendship)
     db.session.commit()
 
+    flash('Friend added successfully.', success_flash)
+
     return redirect('/feed')
 
 
@@ -278,5 +284,7 @@ def change_public():
     user.public = public
 
     db.session.commit()
+
+    flash('Public option changed successfully.', success_flash)
 
     return redirect(f'/user/{user_id}')
