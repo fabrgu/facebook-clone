@@ -58,10 +58,19 @@ class Post extends React.Component {
     };
     this.handleAddComment = this.handleAddComment.bind(this);
     this.handleNewCommentInputChange = this.handleNewCommentInputChange.bind(this);
+    this.showMessage = this.showMessage.bind(this);
   }
 
   handleNewCommentInputChange(event){
     this.setState({newCommentText: event.target.value});
+  }
+
+  showMessage(type, title, message){
+    Swal.fire({
+      icon: type,
+      title: title,
+      text: message
+    });
   }
 
   async handleAddComment() {
@@ -80,7 +89,11 @@ class Post extends React.Component {
           const newComment = response.data["comment"];
           existingComments.push(newComment);
           this.setState({comments: existingComments, newCommentText: ''});
+        } else {
+          this.showMessage('error', 'Oops...', 'Something went wrong!');
         }
+      } else {
+        this.showMessage('error', 'Oops...', 'Something went wrong!');
       }
     }
   }
@@ -179,12 +192,14 @@ class Feed extends React.Component {
 
     this.addNewPost = this.addNewPost.bind(this);
     this.handleNewPostInputChange = this.handleNewPostInputChange.bind(this);
+    this.showMessage = this.showMessage.bind(this);
   }
 
   componentDidMount() {
     const fullUrl = this.props.userProfile ? 
               `${window.location.origin}/posts_for_user_feed` :
-              `${window.location.origin}/posts_for_feed`
+              `${window.location.origin}/posts_for_feed`;
+
     axios.get(fullUrl)
       .then((response) => {
         let posts_to_load = Array.isArray(response.data) ? response.data : [];
@@ -196,6 +211,14 @@ class Feed extends React.Component {
       .catch((error) => {
         console.log(error);
       });
+  }
+
+  showMessage(type, title, message){
+    Swal.fire({
+      icon: type,
+      title: title,
+      text: message
+    });
   }
 
   handleNewPostInputChange(event){
@@ -220,7 +243,11 @@ class Feed extends React.Component {
             posts: existingPosts,
             newPostMessage: ''
           });
+        } else {
+          this.showMessage('error', 'Oops...','Something went wrong!');
         }
+      } else {
+        this.showMessage('error', 'Oops...','Something went wrong!');
       }
     }
   }

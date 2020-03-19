@@ -23,6 +23,15 @@ class Logout extends React.Component {
     super(props);
 
     this.handleLogout = this.handleLogout.bind(this);
+    this.showErrorMessage = this.showErrorMessage.bind(this);
+  }
+
+  showErrorMessage() {
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'Something went wrong!'
+    });
   }
 
   async handleLogout(){
@@ -30,7 +39,11 @@ class Logout extends React.Component {
     if (response.status === 200 && response.data.hasOwnProperty("logged_out")){
       if (response.data["logged_out"]){
         window.location = window.location.origin;
+      } else {
+        this.showErrorMessage();
       }
+    } else {
+      this.showErrorMessage();
     }
   }
 
@@ -45,6 +58,7 @@ class Logout extends React.Component {
     );
   }
 }
+
 class Login extends React.Component {
   constructor(props) {
     super(props);
@@ -53,6 +67,7 @@ class Login extends React.Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.validForm = this.validForm.bind(this);
+    this.showErrorMessage = this.showErrorMessage.bind(this);
   }
 
   validForm(){
@@ -65,6 +80,14 @@ class Login extends React.Component {
     this.setState({[name]: value});
   }
 
+  showErrorMessage(message){
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'Username and/or password are incorrect.'
+    });
+  }
+
   async handleSubmit(event){
     if (this.validForm()){
       const response = await axios.post(`${window.location.origin}/login`, { 
@@ -75,7 +98,11 @@ class Login extends React.Component {
       if (response.status === 200 && response.data.hasOwnProperty("success")){
         if (response.data["success"]){
           window.location = `${window.location.origin}/feed`;
+        } else {
+          this.showErrorMessage('Username and/or password are incorrect.');
         }
+      } else {
+        this.showErrorMessage('Something went wrong!');
       }
     }
 

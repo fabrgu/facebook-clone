@@ -10,6 +10,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.js"></script>
     <!-- axios library -->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- sweet alert 2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <!-- Fonts to support Material Design -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
     <!-- Icons to support Material Design -->
@@ -17,7 +19,6 @@
     <link rel="stylesheet" href="/static/css/main.css" />
   </head>
   <body>
-    <div id="messages"></div>
     <div id="navigation"></div>
     <ul>
       {% with errors = get_flashed_messages(category_filter=["error"]) %}
@@ -42,10 +43,6 @@
     {% block body %}
     {% endblock %}
     <script src="/static/js/navbar.jsx" type="text/jsx"></script>
-    <script src="/static/js/dynamicMessages.jsx" type="text/jsx"></script>
-    <script type="text/jsx">
-      ReactDOM.render(<DynamicMessages />, document.querySelector("#messages"));
-    </script>
     <script type="text/jsx">
       {% if session.get('user_id', False)%}
         ReactDOM.render(<Navbar loggedIn={true} />, document.querySelector("#navigation"));
