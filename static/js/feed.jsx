@@ -226,7 +226,7 @@ class Feed extends React.Component {
   }
 
   render(){
-    const { isLoaded, posts } = this.state
+    const { isLoaded, posts } = this.state;
     let element = <Loading />;
     if (isLoaded){
       const postsToLoad = []

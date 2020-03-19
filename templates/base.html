@@ -17,15 +17,35 @@
     <link rel="stylesheet" href="/static/css/main.css" />
   </head>
   <body>
+    <div id="messages"></div>
     <div id="navigation"></div>
     <ul>
-      {% for message in get_flashed_messages() %}
-      <li>{{ message }}</li>
-      {% endfor %}
+      {% with errors = get_flashed_messages(category_filter=["error"]) %}
+        {%- for msg in errors %}
+          <li>
+            <div class="alert error">
+              {{ msg }}
+            </div>
+          </li>
+        {% endfor -%}
+      {% endwith %}
+      {% with successes = get_flashed_messages(category_filter=["success"]) %}
+        {%- for msg in successes %}
+          <li>
+            <div class="alert success">
+              {{ msg }}
+            </div>
+          </li>
+        {% endfor -%}
+      {% endwith %}
     </ul>
     {% block body %}
     {% endblock %}
     <script src="/static/js/navbar.jsx" type="text/jsx"></script>
+    <script src="/static/js/dynamicMessages.jsx" type="text/jsx"></script>
+    <script type="text/jsx">
+      ReactDOM.render(<DynamicMessages />, document.querySelector("#messages"));
+    </script>
     <script type="text/jsx">
       {% if session.get('user_id', False)%}
         ReactDOM.render(<Navbar loggedIn={true} />, document.querySelector("#navigation"));
