@@ -261,9 +261,9 @@ def search():
     search_term = request.args.get('term')
     user_id = session['user_id']
 
-    results = db.session.query(User, 
-                               Friend).outerjoin(Friend, db.and_(Friend.user_1 == user_id, 
-                               Friend.active == True)).filter((User.user_id != user_id) & 
+    results = db.session.query(User, Friend).outerjoin(Friend, db.and_(Friend.user_1 == user_id, 
+                               Friend.active == True, 
+                               Friend.user_2 == User.user_id)).filter((User.user_id != user_id) & 
                                (User.public == True) & 
                                ((Friend.user_2 == None) |
                                 (Friend.user_2 != User.user_id)) &
