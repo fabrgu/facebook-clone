@@ -5,7 +5,7 @@ body {
   margin-top: 1em;
   margin-left: 1em;
 }
-.feed-centered{
+.centered{
   text-align: center;
 }
 ul {
@@ -22,16 +22,21 @@ ul {
 .alert.success {
   background-color: #4CAF50;
 }
-.closebtn {
-  margin-left: 15px;
-  color: white;
-  font-weight: bold;
+#searchBar {
   float: right;
-  font-size: 22px;
-  line-height: 20px;
-  cursor: pointer;
-  transition: 0.3s;
+  padding: 6px;
+  border: none;
+  margin-top: 8px;
+  margin-right: 16px;
+  font-size: 17px;
 }
-.closebtn:hover {
-  color: black;
+.submitBtn {
+  background-color: #008CBA; 
+  border: none;
+  color: white;
+  padding: 1em 1em;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
 }

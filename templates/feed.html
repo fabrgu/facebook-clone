@@ -12,13 +12,12 @@
     <form action="/search">
       <label for="term">Search by first name or last name</label>
       <input id="search" name="term" required
-        type="text" placeholder="search by first name or last name">
-      <button type="submit">Search</button>
+        type="text" placeholder="first name or last name">
+      <button type="submit" class="submitBtn">Search</button>
     </form>
   </div>
   {% include 'suggested.html' %}
-  <p>Your feed is comprised of your friends' posts</p>
-  <div id="addPost"></div>
+  <p class="centered">Your feed is comprised of your friends' posts</p>
   <div id="feed"></div>
 {% endblock %}
 

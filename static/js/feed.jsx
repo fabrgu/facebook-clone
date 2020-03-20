@@ -108,7 +108,7 @@ class Post extends React.Component {
        );
     }
     return(
-      <div style={{ maxWidth: 450, margin: 'auto' }}>
+      <div style={{ maxWidth: 450, margin: 'auto', marginTop: 10 }}>
         <Card>
           <CardContent>
             <Typography color="textSecondary" gutterBottom>
@@ -131,7 +131,8 @@ class Post extends React.Component {
                 onChange={this.handleNewCommentInputChange} 
                 value={this.state.newCommentText}
               />
-              <Button size="small" onClick={this.handleAddComment}>
+              <Button size="small" style={{color: '#000000', backgroundColor: '#e0e0e0'}}
+                onClick={this.handleAddComment}>
                 Add Comment
               </Button>
             </CardActions>
@@ -268,7 +269,7 @@ class Feed extends React.Component {
       element = postsToLoad;
     }
     return(
-      <div className="feed-centered">
+      <div className="centered">
         <ThemeProvider theme={darkTheme}>
         {this.props.userProfile &&
           <AddPostSection userId={this.props.userId} 

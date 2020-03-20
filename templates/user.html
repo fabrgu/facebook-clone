@@ -4,13 +4,21 @@
 
 {% block body %}
   <h2>{{ user.first_name }} {{ user.last_name }}'s Posts</h2>
+  <div id="searchBar">
+    <form action="/search">
+      <label for="search">Search by first name or last name</label>
+      <input id="search" name="term" required
+        type="text" placeholder="first name or last name">
+      <button type="submit" class="submitBtn">Search</button>
+    </form>
+  </div>
   <div id="profile">
     <form action="/public" method="POST">
       <label for="public">Public?</label>
       <input type="checkbox" id="public" name="public" value="true"
         {% if user.public %}checked{% endif %}>
       If yes, people will be able to search and friend you.
-      <button type="submit">Change public option</button>
+      <button type="submit" class="submitBtn">Change public option</button>
     </form>
   </div>
   <div id="feed-link">
@@ -18,15 +26,6 @@
       Go to Feed
     </a>
   </div>
-  <div id="searchBar">
-    <form action="/search">
-      <label for="search">Search by first name or last name</label>
-      <input id="search" name="term" required
-        type="text" placeholder="search by first name or last name">
-      <button type="submit">Search</button>
-    </form>
-  </div>
-  <div id="addPost"></div>
   <div id="feed"></div>
 {% endblock %}
 
