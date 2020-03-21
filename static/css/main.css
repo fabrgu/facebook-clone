@@ -40,3 +40,27 @@ ul {
   display: inline-block;
   font-size: 14px;
 }
+.submitBtn:hover {
+  background-color: #006C8F;
+}
+.submitBtn.signUp {
+  width: 60%;
+  margin: 8px 0;
+  border-radius: 4px;
+}
+.signup-form-container {
+  border-radius: 5px;
+  padding: 20px;
+}
+#signup-form input {
+  width: 60%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+#search {
+  padding: 5px 5px;
+}

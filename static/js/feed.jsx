@@ -150,7 +150,7 @@ class AddPostSection extends React.Component {
 
   render(){
     return(
-      <div style={{flex: 1}}>
+      <div style={{flex: 1, marginTop: 10}}>
         <Paper variant='outlined' 
           style={{ margin: 'auto', maxWidth: 450 }}>
           <Grid container>
