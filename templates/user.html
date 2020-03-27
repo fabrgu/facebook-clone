@@ -8,7 +8,6 @@
       Go to Feed
     </a>
   </div>
-  <h2>{{ user.first_name }} {{ user.last_name }}'s Posts</h2>
   <div id="searchBar">
     <form action="/search">
       <label for="search">Search by first name or last name</label>
@@ -17,6 +16,7 @@
       <button type="submit" class="submitBtn">Search</button>
     </form>
   </div>
+  <h2>{{ user.first_name }} {{ user.last_name }}'s Posts</h2>
   <div id="profile">
     <form action="/public" method="POST">
       <label for="public">Public?</label>

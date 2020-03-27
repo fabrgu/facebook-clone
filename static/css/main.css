@@ -64,3 +64,24 @@ ul {
 #search {
   padding: 5px 5px;
 }
+#profile-link{
+  margin-left: 1em;
+}
+#suggested-friends{
+  margin-left: 1em;
+}
+#feed-link{
+  margin-left: 2em;
+}
+#back-from-search{
+  margin-left: 1em;
+}
+#profile{
+  margin-left: 1.5em;
+}
+h2{
+  margin-left: 1em;
+}
+h3{
+  margin-left: 1em;
+}
