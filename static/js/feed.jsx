@@ -112,7 +112,7 @@ class Post extends React.Component {
         <Card>
           <CardContent>
             <Typography color="textSecondary" gutterBottom>
-              { this.props.post.user.first_name } 
+              { this.props.post.user.first_name }&nbsp;
               { this.props.post.user.last_name } 
             </Typography>
             <Typography color="textSecondary">
