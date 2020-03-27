@@ -31,14 +31,12 @@ createdb facebook-clone
 
  ```
  psql facebook-clone < database.sql
-
  ```
 
  Install virtualenv if it's not available on your machine already.
 
  ```
  pip3 install virtualenv
-
  ```
 
  Create a virtual environment and install all the python libraries required 
