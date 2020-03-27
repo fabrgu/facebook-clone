@@ -56,10 +56,19 @@ createdb facebook-clone
  pip3 install -r requirements.txt
  ```
 
-Now you can run the app local by running on the command line:
+Now you can run the app locally by running on the command line:
+
 ```
 python3 server.py
 ```
+# To Test
+
+To run any unit tests, while your virtual environment is active, run the following on the command line:
+
+```
+python3 tests.py
+```
+
 # Planning
  * Visuals and Models: https://drive.google.com/file/d/1fC5P8wuw9uWl2hyoC6FxpASm_0x-UzSu/view?usp=sharing
 
