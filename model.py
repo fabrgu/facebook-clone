@@ -139,7 +139,10 @@ def connect_to_db(app):
     db.init_app(app)
 
 def get_connection_string():
-    return 'postgresql:///facebook-clone'
+    if 'DATABASE_URL' in os.environ:
+        return os.environment['DATABASE_URL']
+    else:
+        return 'postgresql:///facebook-clone'
 
 
 if __name__ == "__main__":
