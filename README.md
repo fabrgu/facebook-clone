@@ -57,7 +57,7 @@ createdb facebook-clone
 Now you can run the app locally by running on the command line:
 
 ```
-python3 server.py
+python3 main.py
 ```
 # To Test
 

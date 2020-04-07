@@ -1,3 +1,4 @@
+import os
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
@@ -128,12 +129,17 @@ class Comment(db.Model):
 def connect_to_db(app):
     """Connect the database to our Flask app."""
 
-    # Configure to use PstgreSQL database
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///facebook-clone'
+    # Configure to use PostgreSQL database
+    app.config['SQLALCHEMY_DATABASE_URI'] = get_connection_string()
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['SQLALCHEMY_ECHO'] = True
+    # uncomment to see sql for debugging 
+    # app.config['SQLALCHEMY_ECHO'] = True
+
     db.app = app
     db.init_app(app)
+
+def get_connection_string():
+    return 'postgresql:///facebook-clone'
 
 
 if __name__ == "__main__":
