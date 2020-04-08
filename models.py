@@ -1,4 +1,3 @@
-import os
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from server import app, db, configure_db, connect_to_db
