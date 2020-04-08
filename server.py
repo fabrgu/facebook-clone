@@ -9,7 +9,7 @@ app = Flask(__name__)
 # db/app configuration functions
 def get_connection_string():
     if 'DATABASE_URL' in os.environ:
-        return os.environment['DATABASE_URL']
+        return os.environ['DATABASE_URL']
     else:
         return 'postgresql:///facebook-clone'
 
