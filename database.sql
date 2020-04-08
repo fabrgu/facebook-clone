@@ -49,7 +49,7 @@ CREATE TABLE public.comments (
 );
 
 
-ALTER TABLE public.comments OWNER TO vagrant;
+-- ALTER TABLE public.comments OWNER TO vagrant;
 
 --
 -- Name: comments_comment_id_seq; Type: SEQUENCE; Schema: public; Owner: vagrant
@@ -64,7 +64,7 @@ CREATE SEQUENCE public.comments_comment_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.comments_comment_id_seq OWNER TO vagrant;
+-- ALTER TABLE public.comments_comment_id_seq OWNER TO vagrant;
 
 --
 -- Name: comments_comment_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: vagrant
@@ -87,7 +87,7 @@ CREATE TABLE public.friends (
 );
 
 
-ALTER TABLE public.friends OWNER TO vagrant;
+-- ALTER TABLE public.friends OWNER TO vagrant;
 
 --
 -- Name: friends_friend_id_seq; Type: SEQUENCE; Schema: public; Owner: vagrant
@@ -102,7 +102,7 @@ CREATE SEQUENCE public.friends_friend_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.friends_friend_id_seq OWNER TO vagrant;
+-- ALTER TABLE public.friends_friend_id_seq OWNER TO vagrant;
 
 --
 -- Name: friends_friend_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: vagrant
@@ -125,7 +125,7 @@ CREATE TABLE public.posts (
 );
 
 
-ALTER TABLE public.posts OWNER TO vagrant;
+-- ALTER TABLE public.posts OWNER TO vagrant;
 
 --
 -- Name: posts_post_id_seq; Type: SEQUENCE; Schema: public; Owner: vagrant
@@ -140,7 +140,7 @@ CREATE SEQUENCE public.posts_post_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.posts_post_id_seq OWNER TO vagrant;
+-- ALTER TABLE public.posts_post_id_seq OWNER TO vagrant;
 
 --
 -- Name: posts_post_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: vagrant
@@ -166,7 +166,7 @@ CREATE TABLE public.users (
 );
 
 
-ALTER TABLE public.users OWNER TO vagrant;
+-- ALTER TABLE public.users OWNER TO vagrant;
 
 --
 -- Name: users_user_id_seq; Type: SEQUENCE; Schema: public; Owner: vagrant
@@ -181,7 +181,7 @@ CREATE SEQUENCE public.users_user_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.users_user_id_seq OWNER TO vagrant;
+-- ALTER TABLE public.users_user_id_seq OWNER TO vagrant;
 
 --
 -- Name: users_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: vagrant

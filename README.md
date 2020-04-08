@@ -57,7 +57,7 @@ createdb facebook-clone
 Now you can run the app locally by running on the command line:
 
 ```
-python3 main.py
+python3 app.py
 ```
 # To Test
 
@@ -69,4 +69,7 @@ python3 tests.py
 
 # Planning
  * Visuals and Models: https://drive.google.com/file/d/1fC5P8wuw9uWl2hyoC6FxpASm_0x-UzSu/view?usp=sharing
+
+# Deployed
+The deployed app can be found here: https://facebook-clone-111.herokuapp.com/
 
