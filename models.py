@@ -1,11 +1,20 @@
 import os
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from server import app, db, configure_db, connect_to_db
 
-# Instantiate a SQLAlchemy object. We need this to create our db.Model classes.
-db = SQLAlchemy()
+class ModelMixin:
 
-class User(db.Model): 
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+
+    def update(self):
+        db.session.commit()
+
+
+class User(ModelMixin, db.Model): 
     """ Data model for a user. """
     __tablename__ = "users"
 
@@ -35,7 +44,7 @@ class User(db.Model):
         return json_dict
 
 
-class Friend(db.Model):
+class Friend(ModelMixin, db.Model):
     """ Data model for a friendship. """
     __tablename__ = "friends"
 
@@ -53,7 +62,7 @@ class Friend(db.Model):
             f' user_2={self.user_2}')
 
 
-class Post(db.Model):
+class Post(ModelMixin, db.Model):
     """ Data model for a post. """
     __tablename__ = "posts"
 
@@ -88,7 +97,7 @@ class Post(db.Model):
         return json_dict
 
 
-class Comment(db.Model):
+class Comment(ModelMixin, db.Model):
     """ Data model for a comment. """
     __tablename__ = "comments"
 
@@ -123,31 +132,13 @@ class Comment(db.Model):
 
         return json_dict
 
-# Helper functions
-
-
-def connect_to_db(app):
-    """Connect the database to our Flask app."""
-
-    # Configure to use PostgreSQL database
-    app.config['SQLALCHEMY_DATABASE_URI'] = get_connection_string()
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    # uncomment to see sql for debugging 
-    # app.config['SQLALCHEMY_ECHO'] = True
-
-    db.app = app
-    db.init_app(app)
-
-def get_connection_string():
-    if 'DATABASE_URL' in os.environ:
-        return os.environment['DATABASE_URL']
-    else:
-        return 'postgresql:///facebook-clone'
-
 
 if __name__ == "__main__":
     # As a convenience, if this module is run interactively, it will leave
     # you in a state of being able to work with the database directly.
-    from server import app
-    connect_to_db(app)
+    from flask import Flask
+    current_app = Flask(__name__)
+    configure_db(current_app)
+    connect_to_db(current_app)
+    db.create_all()
     print("Connected to db.")
