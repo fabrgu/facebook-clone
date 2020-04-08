@@ -73,8 +73,8 @@ ul {
 #feed-link{
   margin-left: 2em;
 }
-#back-from-search{
-  margin-left: 1em;
+#back-from-search, .no-results{
+  margin-left: 1.5em;
 }
 #profile{
   margin-left: 1.5em;
