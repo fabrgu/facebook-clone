@@ -70,6 +70,6 @@ python3 tests.py
 # Planning
  * Visuals and Models: https://drive.google.com/file/d/1fC5P8wuw9uWl2hyoC6FxpASm_0x-UzSu/view?usp=sharing
 
-# Deployed
-The deployed app can be found here: https://facebook-clone-111.herokuapp.com/
+# Deployment
+The app was previously deployed to Heroku and could previously be found here: https://facebook-clone-111.herokuapp.com/
 
